@@ -8,9 +8,7 @@ class OntologyTermMarshaller {
     static targetType = OntologyTerm
 
     def convert(OntologyTerm term) {
-        MetadataSelectQuerySpecification spec =
-                ((MetadataSelectQuerySpecification) term)
-
+		
         return [
                 key               : term.key,
                 level             : term.level,
@@ -26,8 +24,8 @@ class OntologyTermMarshaller {
                  * the terms map to patient sets.
                  * Unfortunately, that is not the way the frontend is setup
                  * right now, as right now it needs this data */
-                dimensionCode     : spec.dimensionCode,
-                dimensionTableName: spec.dimensionTableName,
+                dimensionCode     : term.dimensionCode,
+                dimensionTableName: term.dimensionTableName,
         ]
     }
 
