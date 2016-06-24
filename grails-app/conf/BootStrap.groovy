@@ -85,6 +85,8 @@ class BootStrap {
             logger.warn("RModules.pluginScriptDirectory " +
                     "should not be explicitly set, value '$val' ignored")
         }
+		
+		/*
         File rdcModulesDir = GrailsPluginUtils.getPluginDirForName('rdc-rmodules')?.file
         if (!rdcModulesDir) {
             // it actually varies...
@@ -123,7 +125,7 @@ class BootStrap {
             c.RModules.port = 6311
             logger.info("RModules.port fixed to default")
         }
-
+*/
         // Making sure we have default timeout and heartbeat values
         // At this point we assume c.recomdata exists
         if (!c.com.recomdata.containsKey("sessionTimeout"))

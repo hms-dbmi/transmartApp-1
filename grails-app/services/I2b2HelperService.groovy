@@ -4958,7 +4958,7 @@ class I2b2HelperService {
         def ls = [:];
         int i = getLevelFromKey(concept_key) + 1;
         Sql sql = new Sql(dataSource)
-        String sqlt = "SELECT C_FULLNAME, SECURE_OBJ_TOKEN FROM i2b2metadata.i2b2_SECURE WHERE C_FULLNAME LIKE ? escape '\\' AND c_hlevel = ? ORDER BY C_FULLNAME";
+        String sqlt = "SELECT C_FULLNAME, SECURE_OBJ_TOKEN FROM DEAPP.i2b2_SECURE WHERE C_FULLNAME LIKE ? escape '\\' AND c_hlevel = ? ORDER BY C_FULLNAME";
         sql.eachRow(sqlt, [fullname.asLikeLiteral() + "%", i], { row ->
             String conceptkey = prefix + row.c_fullname;
             ls.put(keyToPath(conceptkey), row.secure_obj_token);
@@ -4974,7 +4974,7 @@ class I2b2HelperService {
         def tokens = [:]
         try {
             sql.eachRow("""
-                SELECT sourcesystem_cd, secure_obj_token FROM i2b2metadata.i2b2_SECURE WHERE sourcesystem_cd IN  (""" + listToIN(sdudyIds.asList()) + """) AND c_hlevel = 1
+                SELECT sourcesystem_cd, secure_obj_token FROM DEAPP.i2b2_SECURE WHERE sourcesystem_cd IN  (""" + listToIN(sdudyIds.asList()) + """) AND c_hlevel = 1
             """, { row ->
                 tokens += [(row.sourcesystem_cd): row.secure_obj_token]
             })
@@ -5171,7 +5171,7 @@ class I2b2HelperService {
         //     		})
         //		 
         //		Changed for Sanofi: Root levels are at 0 or -1.
-        String sqlt = "SELECT C_FULLNAME, SECURE_OBJ_TOKEN FROM i2b2metadata.i2b2_SECURE WHERE c_hlevel IN (-1, 0) ORDER BY C_FULLNAME";
+        String sqlt = "SELECT C_FULLNAME, SECURE_OBJ_TOKEN FROM DEAPP.i2b2_SECURE WHERE c_hlevel IN (-1, 0) ORDER BY C_FULLNAME";
         sql.eachRow(sqlt, [], { row ->
             String fullname = row.c_fullname;
             String prefix = fullname.substring(0, fullname.indexOf("\\", 2)); //get the prefix to put on to the fullname to make a key

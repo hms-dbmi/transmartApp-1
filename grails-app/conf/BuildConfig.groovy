@@ -37,7 +37,7 @@ if (dmClass) {
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {}
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
 
     if (!dm) {
         repositories {
@@ -53,12 +53,11 @@ grails.project.dependency.resolution = {
 
     dependencies {
         // you can remove whichever you're not using
-        runtime 'org.postgresql:postgresql:9.3-1100-jdbc4'
         runtime 'com.oracle:ojdbc7:12.1.0.1'
 
         runtime 'org.javassist:javassist:3.16.1-GA'
 
-        compile 'org.transmartproject:transmart-core-api:1.2.4'
+        //compile 'org.transmartproject:transmart-core-api:1.2.2-hackathon-SNAPSHOT'
 
         compile 'antlr:antlr:2.7.7'
         compile 'net.sf.opencsv:opencsv:2.3'
@@ -68,8 +67,10 @@ grails.project.dependency.resolution = {
         compile 'commons-net:commons-net:3.3' // used for ftp transfers
         compile 'org.apache.commons:commons-math:2.2' //>2MB lib briefly used in ChartController
         compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1', {
-            excludes 'groovy', 'nekohtml'
+            excludes 'groovy', 'nekohtml', 'httpclient','httpcore'
         }
+		compile 'org.apache.httpcomponents:httpclient:4.3.6'
+		compile 'org.apache.httpcomponents:httpcore:4.3.3'
         compile 'org.rosuda:Rserve:1.7.3'
         compile 'com.google.guava:guava:14.0.1'
 
@@ -113,10 +114,8 @@ grails.project.dependency.resolution = {
 
         compile ':hibernate:3.6.10.10'
         compile ':quartz:1.0-RC2'
-        // Not compatible with spring security 3.2 yet
-        //compile ':spring-security-kerberos:0.1'
         compile ':spring-security-ldap:2.0-RC2'
-        compile ':spring-security-core:2.0-RC4'
+        compile ':spring-security-core:2.0-RC3'
         compile ':spring-security-oauth2-provider:1.0.5.2'
 
         runtime ':prototype:1.0'
@@ -127,27 +126,18 @@ grails.project.dependency.resolution = {
         compile ":codenarc:0.21"
 
         if (!dm) {
-            compile ':rdc-rmodules:1.2.4'
-            runtime ':transmart-core:1.2.4'
+            //compile ':rdc-rmodules:1.2.4'
+            //runtime ':transmart-core:1.2.2-hackathon-SNAPSHOT'
+			compile ':transmart-legacy-db:1.2.4'
+			//runtime ':transmart-i2b2:1.0-SNAPSHOT'
             compile ':transmart-gwas:1.2.4'
-            //// already included in transmart-gwas
-            //compile ':transmart-legacy-db:1.2.4'
-            //// already included in transmart-gwas
-            //compile ':folder-management:1.2.4'
-            //// already included in transmart-gwas, folder-management
-            //compile ':search-domain:1.2.4'
-            //// already included in search-domain, transmart-gwas,
-            //                       folder-management
-            //compile ':biomart-domain:1.2.4'
-            //// already included in biomart-domain
-            //compile ':transmart-java:1.2.4'
             runtime ':dalliance-plugin:0.2-SNAPSHOT'
-            runtime ':transmart-mydas:0.1-SNAPSHOT'
+            //runtime ':transmart-mydas:0.1-SNAPSHOT'
             runtime ':transmart-rest-api:1.2.4'
             runtime ':blend4j-plugin:1.2.4'
             runtime ':transmart-metacore-plugin:1.2.4'
-
-            test ':transmart-core-db-tests:1.2.4'
+			
+			
         } else {
             dm.internalDependencies delegate
         }
@@ -157,9 +147,13 @@ grails.project.dependency.resolution = {
     }
 }
 
+grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
+grails.plugin.location.'transmart-core'   = '../transmart-core-db'
+
 dm?.with {
-    configureInternalPlugin 'compile', 'rdc-rmodules'
-    configureInternalPlugin 'runtime', 'transmart-core'
+    //configureInternalPlugin 'compile', 'rdc-rmodules'
+    //configureInternalPlugin 'runtime', 'transmart-core'
+	//configureInternalPlugin 'runtime', 'transmart-i2b2'
     configureInternalPlugin 'test', 'transmart-core-db-tests'
     configureInternalPlugin 'compile', 'transmart-gwas'
     configureInternalPlugin 'compile', 'transmart-java'
@@ -168,7 +162,7 @@ dm?.with {
     configureInternalPlugin 'compile', 'folder-management'
     configureInternalPlugin 'compile', 'transmart-legacy-db'
     configureInternalPlugin 'runtime', 'dalliance-plugin'
-    configureInternalPlugin 'runtime', 'transmart-mydas'
+    //configureInternalPlugin 'runtime', 'transmart-mydas'
     configureInternalPlugin 'runtime', 'transmart-rest-api'
     configureInternalPlugin 'runtime', 'blend4j-plugin'
     configureInternalPlugin 'runtime', 'transmart-metacore-plugin'
