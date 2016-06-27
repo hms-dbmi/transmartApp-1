@@ -108,17 +108,11 @@ class ChartController {
         def paramMap = params;
 
         def user = AuthUser.findByUsername(springSecurityService.getPrincipal().username)
-        log.trace("Called childConceptPatientCounts action in ChartController")
-        log.trace("User is:" + user.username);
-        log.trace(user.toString());
         def concept_key = params.concept_key;
-        log.trace("Requested counts for parent_concept_path=" + concept_key);
         def counts = i2b2HelperService.getChildrenWithPatientCountsForConcept(concept_key)
         def access = i2b2HelperService.getChildrenWithAccessForUserNew(concept_key, user)
-        log.trace("access:" + (access as JSON));
-        log.trace("counts = " + (counts as JSON))
 
-        def obj = [counts: counts, accesslevels: access, test1: "works"]
+        def obj = [counts: counts, accesslevels: access]
         render obj as JSON
     }
 
@@ -297,28 +291,20 @@ class ChartController {
      * Action to get the basic statistics for the subset comparison and render them
      */
     def basicStatistics = {
-        log.trace("*******************Called basicStatistics action in ChartController")
+
         request.getSession().setAttribute("gridtable", null);
-        log.trace("Clearing grid in basicstatistics")
+
         def result_instance_id1 = params.result_instance_id1;
         def result_instance_id2 = params.result_instance_id2;
         def al = new AccessLog(username: springSecurityService.getPrincipal().username, event: "DatasetExplorer-Basic Statistics", eventmessage: "RID1:" + result_instance_id1 + " RID2:" + result_instance_id2, accesstime: new java.util.Date())
-        log.trace(al.toString())
-        log.trace(al.username)
-        log.trace(al.event)
+
         al.save()
-        log.trace("Result instance 1:" + result_instance_id1);
-        log.trace("Result instance 2:" + result_instance_id2);
+
         def boolean s1 = true;
         def boolean s2 = true;
-        if (result_instance_id1 == "" || result_instance_id1 == null) {
-            s1 = false;
-        }
-        if (result_instance_id2 == "" || result_instance_id2 == null) {
-            s2 = false;
-        }
-        log.trace("s1:" + s1)
-        log.trace("s2:" + s2)
+        if (result_instance_id1 == "" || result_instance_id1 == null) {s1 = false;}
+        if (result_instance_id2 == "" || result_instance_id2 == null) {s2 = false;}
+
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
         pw.write("<html><head><link rel='stylesheet' type='text/css' href='${resource(dir: 'css', file: 'chartservlet.css')}'></head><body><div class='analysis'>");
@@ -335,18 +321,12 @@ class ChartController {
         }
         pw.write("</tr>");
         pw.write("<tr><td colspan='2' align='center'>");
+		
         renderPatientCountInfoTable(result_instance_id1, result_instance_id2, pw);
 
         /*get the data*/
-        log.trace("Getting age data")
-        double[] values3 = s1 ?
-                i2b2HelperService.getPatientDemographicValueDataForSubset(
-                        "AGE_IN_YEARS_NUM", result_instance_id1) :
-                []
-        double[] values4 = s2 ?
-                i2b2HelperService.getPatientDemographicValueDataForSubset(
-                        "AGE_IN_YEARS_NUM", result_instance_id2) :
-                []
+        double[] values3 = s1 ? i2b2HelperService.getPatientDemographicValueDataForSubset("AGE_IN_YEARS_NUM", result_instance_id1) : []
+        double[] values4 = s2 ? i2b2HelperService.getPatientDemographicValueDataForSubset("AGE_IN_YEARS_NUM", result_instance_id2) : []
 
         log.trace("Rendering age histograms")
         /*render the double histogram*/
@@ -434,7 +414,8 @@ class ChartController {
         }
         pw.write("</td>");
         pw.write("<td><img src='" + graphURL7 + "' width=200 height=300 border=0 usemap='#" + filename7 + "'>");
-        String rmodulesVersion = grailsApplication.mainContext.pluginManager.getGrailsPlugin('rdc-rmodules').version;
+        //String rmodulesVersion = grailsApplication.mainContext.pluginManager.getGrailsPlugin('rdc-rmodules').version;
+		String rmodulesVersion = "1";
         pw.write("<td valign='top'><div style='position:relative;left:-30px;'><a  href=\"javascript:showInfo('plugins/rdc-rmodules-$rmodulesVersion/help/boxplot.html');\"><img src=\"../images/information.png\"></a></div></td>");
         //Should be dynamic to plugin!
         pw.write("</td><td align='center'>");
