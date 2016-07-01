@@ -38,14 +38,15 @@ grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {}
     log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-
+	
     if (!dm) {
         repositories {
             grailsCentral()
             mavenCentral()
-
-            mavenRepo "https://repo.transmartfoundation.org/content/repositories/public/"
-            mavenRepo "https://repo.thehyve.nl/content/repositories/public/"
+			
+			mavenRepo "https://repo.transmartfoundation.org/content/repositories/public/"
+			mavenRepo "https://repo.thehyve.nl/content/repositories/public/"
+            
         }
     } else {
         dm.configureRepositories delegate
@@ -57,7 +58,7 @@ grails.project.dependency.resolution = {
 
         runtime 'org.javassist:javassist:3.16.1-GA'
 
-        //compile 'org.transmartproject:transmart-core-api:1.2.2-hackathon-SNAPSHOT'
+        //compile 'org.transmartproject:transmart-core-api:1.2.2-hackathon-DBMI-SNAPSHOT'
 
         compile 'antlr:antlr:2.7.7'
         compile 'net.sf.opencsv:opencsv:2.3'
@@ -127,15 +128,16 @@ grails.project.dependency.resolution = {
 
         if (!dm) {
             //compile ':rdc-rmodules:1.2.4'
-            //runtime ':transmart-core:1.2.2-hackathon-SNAPSHOT'
-			compile ':transmart-legacy-db:1.2.4'
+            runtime ':transmart-core:1.2.4.DBMI'
+			compile ':transmart-legacy-db:1.2.4.DBMI'
 			//runtime ':transmart-i2b2:1.0-SNAPSHOT'
             compile ':transmart-gwas:1.2.4'
-            runtime ':dalliance-plugin:0.2-SNAPSHOT'
+            //runtime ':dalliance-plugin:0.2-SNAPSHOT'
             //runtime ':transmart-mydas:0.1-SNAPSHOT'
-            runtime ':transmart-rest-api:1.2.4'
+            runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
             runtime ':blend4j-plugin:1.2.4'
             runtime ':transmart-metacore-plugin:1.2.4'
+			compile ':transmart-java:1.2.4'
 			
 			
         } else {
@@ -147,8 +149,8 @@ grails.project.dependency.resolution = {
     }
 }
 
-grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
-grails.plugin.location.'transmart-core'   = '../transmart-core-db'
+//grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
+//grails.plugin.location.'transmart-core'   = '../transmart-core-db'
 
 dm?.with {
     //configureInternalPlugin 'compile', 'rdc-rmodules'
