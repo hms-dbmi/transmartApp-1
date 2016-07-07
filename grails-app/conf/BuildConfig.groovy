@@ -134,7 +134,7 @@ grails.project.dependency.resolution = {
             compile ':transmart-gwas:1.2.4'
             //runtime ':dalliance-plugin:0.2-SNAPSHOT'
             //runtime ':transmart-mydas:0.1-SNAPSHOT'
-            runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
+            //runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
             runtime ':blend4j-plugin:1.2.4'
             runtime ':transmart-metacore-plugin:1.2.4'
 			compile ':transmart-java:1.2.4'
