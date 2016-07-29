@@ -4,6 +4,10 @@
  * @version $Revision: 10098 $
  */
 import grails.plugin.springsecurity.SpringSecurityUtils
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
@@ -13,17 +17,39 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.WebAttributes
 import org.transmart.searchapp.AccessLog
+import org.springframework.beans.factory.annotation.Autowired
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.auth0.spring.security.mvc.Auth0SecurityConfig
+import com.auth0.web.Auth0Config
+import com.auth0.web.NonceUtils
+import com.auth0.web.SessionUtils
+
+import com.auth0.web.Auth0CallbackHandler
+import com.auth0.web.Auth0ClientImpl
 
 /**
  * Login Controller
  */
-class LoginController {
+class LoginController extends Auth0CallbackHandler{
 
     /**
      * Dependency injection for the authenticationTrustResolver.
      */
     def authenticationTrustResolver
     def bruteForceLoginLockService
+
+	@Autowired
+	Auth0Config auth0Config
+	
+	//@Autowired
+	Auth0SecurityConfig auth0SecurityConfig
+	
+	@Autowired
+	Auth0CallbackHandler callbackHandler
 
     /**
      * Dependency injection for the springSecurityService.
@@ -50,39 +76,35 @@ class LoginController {
      * Show the login page.
      */
     def auth = {
-        nocache response
-
-        def guestAutoLogin = grailsApplication.config.com.recomdata.guestAutoLogin;
-        boolean guestLoginEnabled = (guestAutoLogin == 'true' || guestAutoLogin.is(true))
-        log.info("enabled guest login")
-        //log.info("requet:"+request.getQueryString())
-        boolean forcedFormLogin = request.getQueryString() != null
-        log.info("User is forcing the form login? : " + forcedFormLogin)
-
-        // if enabled guest and not forced login
-        if (guestLoginEnabled && !forcedFormLogin) {
-            log.info("proceeding with auto guest login")
-            def guestuser = grailsApplication.config.com.recomdata.guestUserName;
-
-            UserDetails ud = userDetailsService.loadUserByUsername(guestuser)
-            if (ud != null) {
-                log.debug("We have found user: ${ud.username}")
-                springSecurityService.reauthenticate(ud.username)
-                redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
-
-            } else {
-                log.info("can not find the user:" + guestuser);
-            }
-        }
-
-        /*if (springSecurityService.isLoggedIn()) {
-			redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
-		} else	{
-            render view: 'auth', model: [postUrl: request.contextPath + SpringSecurityUtils.securityConfig.apf.filterProcessesUrl]
-        }*/
-        render view: 'auth', model: [postUrl: request.contextPath + SpringSecurityUtils.securityConfig.apf.filterProcessesUrl]
+		// add a Nonce value to session storage
+		NonceUtils.addNonceToStorage(request)
+		
+		render view: 'auth', model: [clientId: auth0Config.clientId, domain: auth0Config.domain, loginCallback: auth0Config.loginCallback, state: SessionUtils.getState(request)]
     }
-
+/*
+	def callback = {
+		
+		callbackHandler = new Auth0CallbackHandler()
+		
+		println("CALLBACK")
+		
+		Auth0ClientImpl auth0ClientImpl = new Auth0ClientImpl(auth0Config)
+		
+		callbackHandler.setAppConfig(auth0Config)
+		callbackHandler.setAuth0Client(auth0ClientImpl)
+		
+		println(callbackHandler)
+		
+		callbackHandler.handle(request, response)
+	}
+	*/
+	
+	
+	def callback = {
+		super.handle(request, response);
+	}
+	
+	
     /**
      * Show denied page.
      */

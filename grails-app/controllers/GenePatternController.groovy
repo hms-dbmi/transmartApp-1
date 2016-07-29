@@ -13,6 +13,8 @@ import org.transmart.CohortInformation
 import org.transmart.ExperimentData
 import org.transmart.HeatmapValidator
 import org.transmart.searchapp.AccessLog
+import static org.quartz.JobBuilder.*;
+import static org.quartz.TriggerBuilder.*;
 
 class GenePatternController {
     def quartzScheduler
@@ -215,13 +217,13 @@ class GenePatternController {
         jdm.put("userName", userName)
 
         def group = "heatmaps"
-        def jobDetail = new JobDetail(jobName, group, genePatternService.getClass())
+        def jobDetail = newJob(jobName, group, genePatternService.getClass())
         jobDetail.setJobDataMap(jdm)
 
         if (asyncJobService.updateStatus(jobName, statusList[5])) {
             return
         }
-        def trigger = new SimpleTrigger("triggerNow", group)
+        def trigger = newTrigger("triggerNow", group)
         quartzScheduler.scheduleJob(jobDetail, trigger)
         ////println "WIP: Gene Pattern replacement"
         // log.debug('WIP: Gene Pattern replacement')
@@ -344,7 +346,7 @@ class GenePatternController {
         jdm.put("error", error)
 
         def group = "heatmaps"
-        def jobDetail = new JobDetail(jobName, group, genePatternService.getClass())
+        def jobDetail = newJob(jobName, group, genePatternService.getClass())
         jobDetail.setJobDataMap(jdm)
 
         //
@@ -352,7 +354,7 @@ class GenePatternController {
             return
         }
 
-        def trigger = new SimpleTrigger("triggerNow", group)
+        def trigger = newTrigger("triggerNow", group)
         quartzScheduler.scheduleJob(jobDetail, trigger)
         //   println "WIP: Gene Pattern replacement"
         // log.debug('WIP: Gene Pattern replacement')
@@ -452,11 +454,11 @@ class GenePatternController {
         jdm.put("userName", userName)
 
         def group = "heatmaps"
-        def jobDetail = new JobDetail(jobName, group, genePatternService.getClass())
+        def jobDetail = newJob(jobName, group, genePatternService.getClass())
         jobDetail.setJobDataMap(jdm)
 
         asyncJobService.updateStatus(jobName, statusList[3])
-        def trigger = new SimpleTrigger("triggerNow", group)
+        def trigger = newTrigger("triggerNow", group)
         quartzScheduler.scheduleJob(jobDetail, trigger)
         //println "WIP: Gene Pattern replacement"
         //log.debug('WIP: Gene Pattern replacement')
@@ -833,11 +835,11 @@ class GenePatternController {
         jdm.put("userName", userName)
 
         def group = "heatmaps"
-        def jobDetail = new JobDetail(jobName, group, genePatternService.getClass())
+        def jobDetail = newJob(jobName, group, genePatternService.getClass())
         jobDetail.setJobDataMap(jdm)
 
         asyncJobService.updateStatus(jobName, statusList[3])
-        def trigger = new SimpleTrigger("triggerNow", group)
+        def trigger = newTrigger("triggerNow", group)
         quartzScheduler.scheduleJob(jobDetail, trigger)
         //println "WIP: Gene Pattern replacement"
         //log.debug('WIP: Gene Pattern replacement')

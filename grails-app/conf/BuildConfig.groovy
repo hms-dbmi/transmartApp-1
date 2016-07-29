@@ -43,9 +43,11 @@ grails.project.dependency.resolution = {
         repositories {
             grailsCentral()
             mavenCentral()
+			mavenRepo "https://mvnrepository.com/"
 			
 			mavenRepo "https://repo.transmartfoundation.org/content/repositories/public/"
 			mavenRepo "https://repo.thehyve.nl/content/repositories/public/"
+			
             
         }
     } else {
@@ -93,7 +95,11 @@ grails.project.dependency.resolution = {
                 'org.springframework.security:spring-security-web:3.2.3.RELEASE', {
             transitive = false
         }
-
+				
+		//compile('com.auth0:auth0-spring-mvc:0.0.1') {
+        //    excludes 'spring-security-config', 'spring-security-core', 'spring-security-web', 'xercesImpl'
+        //}
+				
         test('junit:junit:4.11') {
             transitive = false /* don't bring hamcrest */
             export = false
@@ -105,6 +111,13 @@ grails.project.dependency.resolution = {
         test 'org.gmock:gmock:0.9.0-r435-hyve2', {
             transitive = false
         }
+		
+		compile("org.springframework.boot:spring-boot-starter-web:1.3.7.RELEASE")
+		
+		// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+		compile("org.apache.commons:commons-lang3:3.4")
+		compile('com.squareup.okhttp:okhttp:2.7.5')
+		
 
     }
 
@@ -112,29 +125,31 @@ grails.project.dependency.resolution = {
         build ':release:3.0.1'
         build ':rest-client-builder:2.0.1'
         build ':tomcat:7.0.52.1'
-
+		
         compile ':hibernate:3.6.10.10'
-        compile ':quartz:1.0-RC2'
+        compile ':quartz:1.0.1'
         compile ':spring-security-ldap:2.0-RC2'
         compile ':spring-security-core:2.0-RC3'
-        compile ':spring-security-oauth2-provider:1.0.5.2'
-
+        //compile ':spring-security-oauth2-provider:1.0.5.2'
+		//compile ':auth0:0.4.0'
+		
         runtime ':prototype:1.0'
-        runtime ':jquery:1.7.1'
-        runtime ':resources:1.2.1'
-
+        compile ':jquery:1.11.1'
+        runtime ':resources:1.2.14'
+		compile ":asset-pipeline:2.1.5"
+		
         // support for static code analysis - see codenarc.reports property below
         compile ":codenarc:0.21"
 
         if (!dm) {
             //compile ':rdc-rmodules:1.2.4'
-            runtime ':transmart-core:1.2.4.DBMI'
-			compile ':transmart-legacy-db:1.2.4.DBMI'
-			//runtime ':transmart-i2b2:1.0-SNAPSHOT'
-            compile ':transmart-gwas:1.2.4'
+            //runtime ':transmart-core:1.2.4.DBMI'
+			//compile ':transmart-legacy-db:1.2.4.DBMI'
+			//runtime ':transmart-i2b2:1.0-DBMI-SNAPSHOT'
+            //compile ':transmart-gwas:1.2.4'
             //runtime ':dalliance-plugin:0.2-SNAPSHOT'
             //runtime ':transmart-mydas:0.1-SNAPSHOT'
-            runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
+            //runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
             runtime ':blend4j-plugin:1.2.4'
             runtime ':transmart-metacore-plugin:1.2.4'
 			compile ':transmart-java:1.2.4'
@@ -149,8 +164,11 @@ grails.project.dependency.resolution = {
     }
 }
 
-//grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
-//grails.plugin.location.'transmart-core'   = '../transmart-core-db'
+grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
+grails.plugin.location.'transmart-core'   = '../transmart-core-db'
+grails.plugin.location.'transmart-gwas-plugin'   = '../transmart-gwas-plugin'
+grails.plugin.location.'transmart-legacy-db' = '../transmart-legacy-db'
+//grails.plugin.location.'auth0-spring-mvc' = '../auth0-spring-mvc'
 
 dm?.with {
     //configureInternalPlugin 'compile', 'rdc-rmodules'
@@ -165,7 +183,7 @@ dm?.with {
     configureInternalPlugin 'compile', 'transmart-legacy-db'
     configureInternalPlugin 'runtime', 'dalliance-plugin'
     //configureInternalPlugin 'runtime', 'transmart-mydas'
-    configureInternalPlugin 'runtime', 'transmart-rest-api'
+    //configureInternalPlugin 'runtime', 'transmart-rest-api'
     configureInternalPlugin 'runtime', 'blend4j-plugin'
     configureInternalPlugin 'runtime', 'transmart-metacore-plugin'
 }

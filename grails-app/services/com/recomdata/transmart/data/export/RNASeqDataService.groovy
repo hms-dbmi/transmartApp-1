@@ -71,7 +71,7 @@ class RNASeqDataService {
         for (Iterator<RegionRow> iterator = rnaseqRegionResult.rows; iterator.hasNext();) {
             RegionRow row = (RegionRow) iterator.next()
 
-            String[] line = templateArray.clone()
+            String[] line = (String[]) templateArray.clone()
 
             line[0] = i++ as String
             line[1] = row.name as String
@@ -82,11 +82,12 @@ class RNASeqDataService {
             line[6] = row.cytoband
 
             int j = 7
-            PER_ASSAY_COLUMNS.each { k, Closure<RnaSeqValues> value ->
-                assays.each { AssayColumn assay ->
-                    line[j++] = value(row.getAt(assay)) as String
-                }
-            }
+			
+            //PER_ASSAY_COLUMNS.each { k, Closure<RnaSeqValues> value ->
+            //    assays.each { AssayColumn assay ->
+            //        line[j++] = value(row.getAt(assay)) as String
+            //    }
+            //}
 
             writerUtil.writeLine(line)
         }

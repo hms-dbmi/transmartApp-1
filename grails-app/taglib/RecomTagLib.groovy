@@ -1,4 +1,4 @@
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
+
 import org.transmart.biomart.ContentRepository
 
 import java.text.DecimalFormat

@@ -26,7 +26,9 @@ def logger = Logger.getLogger('com.recomdata.conf.resources')
 
 beans = {
     xmlns context: "http://www.springframework.org/schema/context"
-
+	
+	context.'component-scan'('base-package': "com.auth0.web")
+	
     if (grailsApplication.config.org.transmart.security.samlEnabled) {
         importBeans('classpath:/spring/spring-security-saml.xml')
     }
@@ -36,7 +38,8 @@ beans = {
         DefaultBeanConfiguration bean ->
             bean.beanDefinition.autowireCandidate = false
     }
-
+	
+	
     quartzSpringScope(QuartzSpringScope)
     quartzScopeConfigurer(CustomScopeConfigurer) {
         scopes = ImmutableMap.of('quartz', ref('quartzSpringScope'))
@@ -108,14 +111,15 @@ beans = {
             return {}
         }
     }
-
-    if (!('clientCredentialsAuthenticationProvider' in
-            grailsApplication.config.grails.plugin.springsecurity.providerNames)) {
-        SpringSecurityOauth2ProviderGrailsPlugin.metaClass.getDoWithSpring = { ->
-            logger.info "Skipped Oauth2 Grails plugin initialization"
-            return {}
-        }
-    }
+	
+	if (!('clientCredentialsAuthenticationProvider' in
+		            grailsApplication.config.grails.plugin.springsecurity.providerNames)) {
+		        SpringSecurityOauth2ProviderGrailsPlugin.metaClass.getDoWithSpring = { ->
+		            logger.info "Skipped Oauth2 Grails plugin initialization"
+		            return {}
+		}
+	}
+		
 
     bruteForceLoginLockService(BruteForceLoginLockService) {
         allowedNumberOfAttempts = grailsApplication.config.bruteForceLoginLock.allowedNumberOfAttempts
@@ -130,4 +134,7 @@ beans = {
         bruteForceLoginLockService = ref('bruteForceLoginLockService')
     }
 
+	
+	
+	
 }

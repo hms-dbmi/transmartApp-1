@@ -1,4 +1,4 @@
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
+
 
 class PluginDetectorController {
 

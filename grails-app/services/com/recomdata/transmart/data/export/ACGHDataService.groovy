@@ -69,7 +69,7 @@ class ACGHDataService {
         for (Iterator<RegionRow> iterator = regionResult.rows; iterator.hasNext();) {
             RegionRow row = (RegionRow) iterator.next()
 
-            String[] line = templateArray.clone()
+            String[] line = (String[]) templateArray.clone()
 
             line[0] = i++ as String
             line[1] = row.chromosome as String
@@ -79,11 +79,13 @@ class ACGHDataService {
             line[5] = row.cytoband
 
             int j = 6
-            PER_ASSAY_COLUMNS.each { k, Closure<AcghValues> value ->
-                assays.each { AssayColumn assay ->
-                    line[j++] = value(row.getAt(assay)) as String
-                }
-            }
+			
+			//TODO: Huh?
+            //PER_ASSAY_COLUMNS.each { k, Closure<AcghValues> value ->
+            //    assays.each { AssayColumn assay ->
+            //        line[j++] = value(row.getAt(assay)) as String
+            //    }
+            //}
 
             writerUtil.writeLine(line)
         }

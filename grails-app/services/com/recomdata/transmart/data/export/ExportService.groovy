@@ -14,6 +14,9 @@ import org.transmart.searchapp.AccessLog
 
 import javax.annotation.Resource
 
+import static org.quartz.JobBuilder.*;
+import static org.quartz.TriggerBuilder.*;
+
 class ExportService {
 
     static transactional = true
@@ -197,13 +200,13 @@ class ExportService {
 
         jdm.put("userInContext", currentUser.targetSource.target)
 
-        def jobDetail = new JobDetail(params.jobName, params.analysis, GenericJobExecutor.class)
+        def jobDetail = newJob(params.jobName, params.analysis, GenericJobExecutor.class)
         jobDetail.setJobDataMap(jdm)
 
         if (asyncJobService.updateStatus(params.jobName, statusList[2])) {
             return
         }
-        def trigger = new SimpleTrigger("triggerNow" + Math.random(), params.analysis)
+        def trigger = newTrigger("triggerNow" + Math.random(), params.analysis)
         quartzScheduler.scheduleJob(jobDetail, trigger)
     }
 

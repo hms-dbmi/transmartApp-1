@@ -16,7 +16,8 @@ class BootStrap {
         securityContextPersistenceFilter.forceEagerSessionCreation = true
 
         SpringSecurityUtils.clientRegisterFilter('concurrentSessionFilter', SecurityFilterPosition.CONCURRENT_SESSION_FILTER)
-
+		SpringSecurityUtils.clientRegisterFilter('auth0AuthenticationFilter', SecurityFilterPosition.BASIC_AUTH_FILTER)
+		
         if (grailsApplication.config.org.transmart.security.samlEnabled) {
             SpringSecurityUtils.clientRegisterFilter(
                     'metadataGeneratorFilter', SecurityFilterPosition.FIRST)
