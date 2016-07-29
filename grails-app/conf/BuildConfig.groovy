@@ -95,10 +95,10 @@ grails.project.dependency.resolution = {
                 'org.springframework.security:spring-security-web:3.2.3.RELEASE', {
             transitive = false
         }
-				
-		//compile('com.auth0:auth0-spring-mvc:0.0.1') {
-        //    excludes 'spring-security-config', 'spring-security-core', 'spring-security-web', 'xercesImpl'
-        //}
+			
+		compile('com.auth0:auth0-spring-mvc:0.1.0') 
+		compile('com.auth0:auth0-spring-security-mvc:0.1.0')
+		compile('com.auth0:auth0:0.4.0')
 				
         test('junit:junit:4.11') {
             transitive = false /* don't bring hamcrest */
@@ -111,13 +111,6 @@ grails.project.dependency.resolution = {
         test 'org.gmock:gmock:0.9.0-r435-hyve2', {
             transitive = false
         }
-		
-		compile("org.springframework.boot:spring-boot-starter-web:1.3.7.RELEASE")
-		
-		// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-		compile("org.apache.commons:commons-lang3:3.4")
-		compile('com.squareup.okhttp:okhttp:2.7.5')
-		
 
     }
 
@@ -130,8 +123,8 @@ grails.project.dependency.resolution = {
         compile ':quartz:1.0.1'
         compile ':spring-security-ldap:2.0-RC2'
         compile ':spring-security-core:2.0-RC3'
-        //compile ':spring-security-oauth2-provider:1.0.5.2'
-		//compile ':auth0:0.4.0'
+        compile ':spring-security-oauth2-provider:1.0.5.2'
+		
 		
         runtime ':prototype:1.0'
         compile ':jquery:1.11.1'
@@ -168,7 +161,7 @@ grails.plugin.location.'transmart-i2b2' = "../transmart-i2b2-plugin"
 grails.plugin.location.'transmart-core'   = '../transmart-core-db'
 grails.plugin.location.'transmart-gwas-plugin'   = '../transmart-gwas-plugin'
 grails.plugin.location.'transmart-legacy-db' = '../transmart-legacy-db'
-//grails.plugin.location.'auth0-spring-mvc' = '../auth0-spring-mvc'
+
 
 dm?.with {
     //configureInternalPlugin 'compile', 'rdc-rmodules'
