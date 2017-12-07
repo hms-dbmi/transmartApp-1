@@ -14,33 +14,40 @@ import org.json.JSONObject;
  */
 public class ExportColumn {
     private String id;
+    private String basename;
     private String label;
     private String pattern;
     private String type;
-    private Integer width;
+    private String tooltip;
 
     public ExportColumn(String id, String label, String pattern, String type) {
         this.id = id;
         this.label = label;
+        this.basename = label;
         this.pattern = pattern;
         this.type = type;
-        this.width = -1;
+        this.tooltip = label;
     }
 
-    public ExportColumn(String id, String label, String pattern, String type, Integer width) {
+    public ExportColumn(String id, String label, String pattern, String type, String tooltip) {
         this.id = id;
         this.label = label;
+        this.basename = label;
         this.pattern = pattern;
         this.type = type;
-        this.width = width;
+        this.tooltip = tooltip;
     }
 
     public JSONObject toJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
         json.put("name", id);
         json.put("header", label);
+        json.put("tooltip", tooltip);
+        if (type != null && type.toLowerCase().equals("number"))
+            json.put("type", "float");
+        else
+            json.put("type", "string");
         json.put("sortable", true);
-        json.put("width", 50);
         return json;
     }
 
@@ -57,15 +64,6 @@ public class ExportColumn {
 
             json.put("sType", typeOut);
         }
-        /*
-        if (width > 0)
-		{
-			json.put("sWidth", width.toString() + "px");
-		}
-		else
-		{
-			json.put("sWidth", "100px");
-		}*/
 
         return json;
     }
@@ -76,6 +74,14 @@ public class ExportColumn {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBasename() {
+        return basename;
+    }
+
+    public void setBasename(String basename) {
+        this.basename = basename;
     }
 
     public String getLabel() {
@@ -102,11 +108,11 @@ public class ExportColumn {
         this.type = type;
     }
 
-    public Integer getWidth() {
-        return width;
+    public String getTooltip() {
+        return tooltip;
     }
 
-    public void setWidth(Integer height) {
-        this.width = width;
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
     }
 }

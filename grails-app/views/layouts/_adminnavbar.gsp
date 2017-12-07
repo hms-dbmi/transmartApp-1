@@ -166,7 +166,7 @@
 </div>
 
 <g:if test="${!!grailsApplication.getControllerClass('ImportXnatController')}">
-    <g:if test="${grailsApplication.config.org.transmart.xnatImporterEnabled}">
+    <g:if test="${grailsApplication.config.org.transmart.xnatImporterEnable}">
         <div class='navbarBox'>
             <div class="navcontainer1">
                 <h1 class="panelHeader">
@@ -189,12 +189,14 @@
 <div class='navbarBox'>
     <div class="navcontainer1">
         <h1 class="panelHeader">
-            Package
+            Package and Configuration
         </h1>
         <ul class="navlist">
             <li>
                 <span class="adminMenuButton"><g:link class="list" controller="buildInfo"
                                                       action="index">Build Information</g:link></span>
+                <span class="adminMenuButton"><g:link class="list" controller="statusInfo"
+                                                      action="index">Status of Support Connections</g:link></span>
             </li>
         </ul>
     </div>

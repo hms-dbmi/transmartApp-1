@@ -1,3 +1,4 @@
+import org.apache.commons.lang.RandomStringUtils
 import org.codehaus.groovy.grails.exceptions.InvalidPropertyException
 import org.springframework.transaction.TransactionStatus
 import org.transmart.searchapp.*
@@ -111,7 +112,7 @@ class AuthUserController {
 
         bindData person, params, [ include: [
             'enabled', 'username', 'userRealName', 'email',
-            'description', 'emailShow', 'authorities'
+            'description', 'emailShow', 'authorities', 'changePassword'
         ]]
 
         // We have to make that check at the user creation since the RModules check over this.
@@ -122,7 +123,7 @@ class AuthUserController {
             return render(view: create ? 'create' : 'edit', model: buildPersonModel(person))
         }
 
-        if (params.passwd && !params.passwd.isEmpty() && !params.passwd.equals(person.getPersistentValue("passwd"))) {
+        if (params.passwd && !params.passwd.isEmpty()) {
 
             def passwordStrength = grailsApplication.config.com.recomdata.passwordstrength ?: null
             def strengthPattern = passwordStrength?.pattern ?: null
@@ -135,9 +136,13 @@ class AuthUserController {
             }
 
             person.passwd = springSecurityService.encodePassword(params.passwd)
-        } else  {
-            flash.message = 'Password must be provided';
-            return render(view: create ? 'create' : 'edit', model: buildPersonModel(person))
+        } else if (create) {
+            if (grailsApplication.config.transmartproject.authUser.create.passwordRequired != false) {
+                flash.message = 'Password must be provided';
+                return render(view: create ? 'create' : 'edit', model: buildPersonModel(person))
+            } else {
+                person.passwd = springSecurityService.encodePassword(params.passwd?:"FilledByAuthUserController_" + RandomStringUtils.random(12, true, true));
+            }
         }
 
         person.name = person.userRealName

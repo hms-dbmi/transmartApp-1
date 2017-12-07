@@ -12,6 +12,8 @@ class BootStrap {
 
     def grailsApplication
 
+    def OAuth2SyncService
+
     def init = { servletContext ->
         securityContextPersistenceFilter.forceEagerSessionCreation = true
 
@@ -43,6 +45,11 @@ class BootStrap {
 
         // force marshaller registrar initialization
         grailsApplication.mainContext.getBean 'marshallerRegistrarService'
+
+        if ('clientCredentialsAuthenticationProvider' in
+                grailsApplication.config.grails.plugin.springsecurity.providerNames) {
+            OAuth2SyncService.syncOAuth2Clients()
+        }
     }
 
     private void fixupConfig() {
@@ -71,7 +78,7 @@ class BootStrap {
         }
 
         if (!tsAppRScriptsDir || !tsAppRScriptsDir.isDirectory()) {
-            throw new RuntimeException('Could not determine proper for ' +
+            throw new RuntimeException('Could not determine proper value for ' +
                     'com.recomdata.transmart.data.export.rScriptDirectory')
         }
         c.com.recomdata.transmart.data.export.rScriptDirectory = tsAppRScriptsDir.canonicalPath
@@ -129,9 +136,9 @@ class BootStrap {
         // Making sure we have default timeout and heartbeat values
         // At this point we assume c.recomdata exists
         if (!c.com.recomdata.containsKey("sessionTimeout"))
-            c.com.recomdata.sessionTimeout = 300
+            c.com.recomdata.sessionTimeout = 3600
         if (!c.com.recomdata.containsKey("heartbeatLaps"))
-            c.com.recomdata.heartbeatLaps = 30
+            c.com.recomdata.heartbeatLaps = 60
     }
 
 

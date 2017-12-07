@@ -63,6 +63,9 @@
 
     var deleteFileURL = "${createLink([controller:'fmFolder',action:'deleteFile'])}";
     var deleteFolderURL = "${createLink([controller:'fmFolder',action:'deleteFolder'])}";
+    var deleteStudyURL = "${createLink([controller:'fmFolder',action:'deleteStudy'])}";
+    var deleteProgramURL = "${createLink([controller:'fmFolder',action:'deleteProgram'])}";
+    var hasChildrenURL = "${createLink([controller:'fmFolder',action:'hasChildren'])}";
 
     var updateSearchCategoryURL = "${createLink([controller:'RWG', action:'updateSearchCategory'])}";
 
@@ -76,5 +79,8 @@
 
     var addNodeDseURL = "${createLink([controller:'RWG', action:'addOpenedNodeDSE'])}";
     var removeNodeDseURL = "${createLink([controller:'RWG', action:'removeOpenedNodeDSE'])}";
+
+    var uploadFilesURL = "${createLink([controller:'uploadFiles',action:'displayUpload'])}";
+    var uploadActionURL = "${createLink([controller:'uploadFiles',action:'upload'])}"; 
 
 </script>

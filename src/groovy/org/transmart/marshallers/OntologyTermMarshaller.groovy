@@ -1,15 +1,14 @@
 package org.transmart.marshallers
 
 import org.transmartproject.core.ontology.OntologyTerm
-import org.transmartproject.db.ontology.MetadataSelectQuerySpecification
 
+//import org.transmartproject.core.ontology.BoundModifier
 class OntologyTermMarshaller {
 
     static targetType = OntologyTerm
 
     def convert(OntologyTerm term) {
-		
-        return [
+        def ret = [
                 key               : term.key,
                 level             : term.level,
                 fullName          : term.fullName,
@@ -27,6 +26,13 @@ class OntologyTermMarshaller {
                 dimensionCode     : term.dimensionCode,
                 dimensionTableName: term.dimensionTableName,
         ]
+
+/*        if (term instanceof BoundModifier) {
+            ret['applied_path'] = term.appliedPath
+            ret['qualified_term_key'] = term.qualifiedTerm.key
+        }
+*/
+        ret
     }
 
 }

@@ -38,15 +38,14 @@ grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {}
     log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-	
+
     if (!dm) {
         repositories {
             grailsCentral()
+            mavenLocal()
             mavenCentral()
-			
-			mavenRepo "https://repo.transmartfoundation.org/content/repositories/public/"
-			mavenRepo "https://repo.thehyve.nl/content/repositories/public/"
-            
+
+            mavenRepo "https://repo.transmartfoundation.org/content/repositories/public/"
         }
     } else {
         dm.configureRepositories delegate
@@ -58,7 +57,7 @@ grails.project.dependency.resolution = {
 
         runtime 'org.javassist:javassist:3.16.1-GA'
 
-        //compile 'org.transmartproject:transmart-core-api:1.2.2-hackathon-DBMI-SNAPSHOT'
+        compile 'org.transmartproject:transmart-core-api:16.2'
 
         compile 'antlr:antlr:2.7.7'
         compile 'net.sf.opencsv:opencsv:2.3'
@@ -67,13 +66,19 @@ grails.project.dependency.resolution = {
         compile "org.apache.lucene:lucene-highlighter:2.4.0"
         compile 'commons-net:commons-net:3.3' // used for ftp transfers
         compile 'org.apache.commons:commons-math:2.2' //>2MB lib briefly used in ChartController
-        compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1', {
-            excludes 'groovy', 'nekohtml', 'httpclient','httpcore'
+        compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.5.2', {
+            excludes 'groovy', 'nekohtml', 'httpclient', 'httpcore'
         }
 		compile 'org.apache.httpcomponents:httpclient:4.3.6'
 		compile 'org.apache.httpcomponents:httpcore:4.3.3'
         compile 'org.rosuda:Rserve:1.7.3'
-        compile 'com.google.guava:guava:14.0.1'
+        compile 'com.google.guava:guava:18.0'
+        compile 'net.sf.ehcache:ehcache:2.9.0'
+        compile 'org.apache.httpcomponents:httpclient:4.4.1'
+        compile 'org.apache.httpcomponents:httpcore:4.4.1'
+
+        compile 'org.apache.solr:solr-solrj:5.4.1'
+        compile 'org.apache.solr:solr-core:5.4.1'
 
         /* we need at least servlet-api 2.4 because of HttpServletResponse::setCharacterEncoding */
         compile "javax.servlet:servlet-api:$grails.servlet.version" /* delete from the WAR afterwards */
@@ -109,37 +114,52 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build ':release:3.0.1'
-        build ':rest-client-builder:2.0.1'
-        build ':tomcat:7.0.52.1'
+        build ':release:3.1.1'
+        build ':tomcat:7.0.54'
 
-        compile ':hibernate:3.6.10.10'
+        compile ':hibernate:3.6.10.19'
+        compile ':rest-client-builder:2.1.1'
+        compile ':cache-ehcache:1.0.5'
         compile ':quartz:1.0-RC2'
+        compile ':spring-security-kerberos:1.0.0'
         compile ':spring-security-ldap:2.0-RC2'
-        compile ':spring-security-core:2.0-RC3'
-        compile ':spring-security-oauth2-provider:1.0.5.2'
+        compile ':spring-security-core:2.0-RC5'
+        compile ':spring-security-oauth2-provider:2.0-RC5'
 
         runtime ':prototype:1.0'
-        runtime ':jquery:1.7.1'
+        runtime ':jquery:1.11.1'
+        runtime ':jquery-ui:1.10.4'
         runtime ':resources:1.2.1'
 
         // support for static code analysis - see codenarc.reports property below
         compile ":codenarc:0.21"
 
         if (!dm) {
-            //compile ':rdc-rmodules:1.2.4'
-            runtime ':transmart-core:1.2.4.DBMI'
-			compile ':transmart-legacy-db:1.2.4.DBMI'
-			//runtime ':transmart-i2b2:1.0-SNAPSHOT'
-            compile ':transmart-gwas:1.2.4'
-            //runtime ':dalliance-plugin:0.2-SNAPSHOT'
-            //runtime ':transmart-mydas:0.1-SNAPSHOT'
-            //runtime ':transmart-rest-api:1.2.2-SNAPSHOT'
-            runtime ':blend4j-plugin:1.2.4'
-            runtime ':transmart-metacore-plugin:1.2.4'
-			compile ':transmart-java:1.2.4'
-			
-			
+            runtime ':smart-r:16.2-STABLE'
+            compile ':rdc-rmodules:16.2'
+            runtime ':transmart-core:16.2'
+            compile ':transmart-gwas:16.2'
+            compile ':transmart-gwas-plink:16.2'
+            //// already included in transmart-gwas
+            //compile ':transmart-legacy-db:16.2'
+            //// already included in transmart-gwas
+            //compile ':folder-management:16.2'
+            //// already included in transmart-gwas, folder-management
+            //compile ':search-domain:16.2'
+            //// already included in search-domain, transmart-gwas,
+            //                       folder-management
+            //compile ':biomart-domain:16.2'
+            //// already included in biomart-domain
+            //compile ':transmart-java:16.2'
+            runtime ':dalliance-plugin:16.2'
+            runtime ':transmart-mydas:16.2'
+            runtime ':transmart-rest-api:16.2'
+            runtime ':blend4j-plugin:16.2'
+            runtime ':transmart-metacore-plugin:16.2'
+            runtime ':transmart-xnat-importer:16.2'
+            runtime ':xnat-viewer:16.2'
+
+            test ':transmart-core-db-tests:16.2'
         } else {
             dm.internalDependencies delegate
         }
@@ -158,6 +178,7 @@ dm?.with {
 	//configureInternalPlugin 'runtime', 'transmart-i2b2'
     configureInternalPlugin 'test', 'transmart-core-db-tests'
     configureInternalPlugin 'compile', 'transmart-gwas'
+    configureInternalPlugin 'compile', 'transmart-gwas-plink'
     configureInternalPlugin 'compile', 'transmart-java'
     configureInternalPlugin 'compile', 'biomart-domain'
     configureInternalPlugin 'compile', 'search-domain'

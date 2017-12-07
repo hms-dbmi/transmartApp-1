@@ -10,6 +10,7 @@ import com.recomdata.export.ExportTableNew
 import com.recomdata.util.DomainObjectExcelHelper
 import com.recomdata.util.ElapseTimer
 import fm.FmFolder
+import fm.FmFolderAssociation
 import org.transmart.SearchResult
 import org.transmart.biomart.BioAssayAnalysis
 import org.transmart.biomart.Experiment
@@ -164,11 +165,11 @@ class ExperimentAnalysisController {
 
         def formLayout = formLayoutService.getLayout('study');
 
-        def parent = FmFolder.findByObjectUid(expid)
+        def parent = FmFolderAssociation.findByObjectUid(expid)
 
         log.info "Parent = " + parent
 
-//		def analysisFolders = FmFolder.executeQuery("from FmFolder as fd where fd.folderType = :folderType and fd.folderLevel = :level and fd.folderFullName like '" + parent.folderFullName + "%' order by folderName", [folderType: FolderType.ANALYSIS.name(), level: parent.folderLevel + 1])
+//		def analysisFolders = FmFolder.executeQuery("from FmFolder as fd where fd.folderType = :folderType and fd.folderLevel = :level and fd.folderFullName like '" + parent.folderFullName + "%' escape '*' order by folderName", [folderType: FolderType.ANALYSIS.name(), level: parent.folderLevel + 1])
 
 //		log.info "Subfolders = " + analysisFolders
 

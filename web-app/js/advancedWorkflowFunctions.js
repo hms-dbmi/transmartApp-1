@@ -144,7 +144,7 @@ function validateHeatMapsSample(completedFunction)
 function validateheatmapComplete(result,completedFunction)
 {
 	//Get the JSON string we got from the server into a real JSON object.
-	var mobj=result.responseText.evalJSON();
+	var mobj=jQuery.parseJSON(result.responseText);
 	
 	//If we failed to retrieve any test from the heatmap server call, we alert the user here. Otherwise, show the popup.
 	if(mobj.NoData && mobj.NoData == "true")
@@ -206,7 +206,7 @@ function finalAdvancedMenuValidationSample()
 				},
 				timeout: '1800000',
 				params: {jobType:  GLOBAL.HeatmapType}
-			})
+			});
 }
 
 //DatasetExplorer
@@ -302,7 +302,7 @@ function finalAdvancedMenuValidation()
 		}else if(pathwayEmpty){
 			alert('Please specify a pathway before continuing');
 		}else if(!numClustersValid){
-			alert('Number of clusters is invalid!')
+			alert('Number of clusters is invalid!');
 		}
 	}	
 

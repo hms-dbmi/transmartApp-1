@@ -50,7 +50,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <g:each in="${authority.people}" status="i" var="person">
+                        <g:each in="${sortedPeople}" status="i" var="person">
                             <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                                 <td>${person.id}</td>
                                 <td>${person.username?.encodeAsHTML()}</td>
@@ -59,7 +59,7 @@
                                 <td>${person.description?.encodeAsHTML()}</td>
                                 <td class="actionButtons">
                                     <span class="actionButton">
-                                        <g:link action="show" id="${person.id}">Detail</g:link>
+                                        <g:link controller="authUser" action="show" id="${person.id}">Detail</g:link>
                                     </span>
                                 </td>
                             </tr>
